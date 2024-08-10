@@ -1,0 +1,6 @@
+https://osint.digitalside.it/Threat-Intel/lists/latesturls.txt     -- <mal_url>
+https://gist.githubusercontent.com/BBcan177/bf29d47ea04391cb3eb0/raw/  -- <mal_ip>
+https://www.binarydefense.com/banlist.txt -- <mal_ip>
+https://cinsscore.com/list/ci-badguys.txt -- <mal_ip>
+https://phishing.army/download/phishing_army_blocklist.txt -- <mal_domain>
+https://github.com/stamparm/blackbook/blob/master/blackbook.txt -- <mal_domain>

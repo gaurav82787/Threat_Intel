@@ -1,0 +1,9 @@
+traffic analysis done malicious ip,domain alerts , malicious traffic capture and aggregation  ---
+log aggregation
+resource monitoring
+feeds collection
+security policies
+
+
+
+whitelisting the applications ... user input , user defined settings

@@ -1,0 +1,9 @@
+mongo mongodb://root:mongo1234@10.10.1.1:27017
+use Threat_Intel
+db.createUser({
+  user: "agent",
+  pwd: "agent1234",
+  roles: [
+    { role: "read", db: "Threat_Intel" }
+  ]
+})

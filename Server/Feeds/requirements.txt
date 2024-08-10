@@ -1,0 +1,6 @@
+#add everyone here
+stix2 
+taxii2-client
+elasticsearch
+yara
+pymongo
