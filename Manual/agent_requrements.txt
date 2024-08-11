@@ -1,7 +1,0 @@
-yara
-scapy
-pymongo
-requests
-watchdog
-
-#to be filled

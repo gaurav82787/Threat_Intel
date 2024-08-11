@@ -1,0 +1,6 @@
+requests
+watchdog
+pymongo
+psutil
+scapy
+yara

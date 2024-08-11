@@ -14,7 +14,6 @@ from Traffic_Analysis import Traffic_Analysis_alpha as TA
 from Traffic_Analysis import resource_monitor as RM
 from datetime import date
 import base64
-import requests
 import tarfile
 from lib_shared.common_config import *
 # Get the current date
