@@ -1,0 +1,38 @@
+ 
+version: '3.8'
+
+services:
+  linux1:
+    image: ubuntu:latest
+    container_name: server
+    ports:
+      - "1022:22"    # Expose SSH port for linux1
+      - "1080:80"    # Example additional port
+    volumes:
+      - ./Server:/home/swiftsafe  # Local folder mapped to /data in the container
+    command: >
+      bash -c "apt-get update &&
+               apt-get install -y openssh-server &&
+               mkdir /var/run/sshd &&
+               echo 'root:root' | chpasswd &&
+               /usr/sbin/sshd -D"
+
+  linux2:
+    image: ubuntu:latest
+    container_name: client1
+    ports:
+      - "2022:22"    # Expose SSH port for linux2
+      - "2080:80"    # Example additional port
+      - "2021:21"  # Example additional port
+    volumes:
+      - ./Agent:/home/swiftsafe  # Local folder mapped to /data in the container
+    command: >
+      bash -c "apt-get update &&
+               apt-get install -y openssh-server &&
+               mkdir /var/run/sshd &&
+               echo 'root:root' | chpasswd &&
+               /usr/sbin/sshd -D"
+
+networks:
+  default:
+    driver: bridge

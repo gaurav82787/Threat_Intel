@@ -1,6 +1,4 @@
 import subprocess
-import requests
-import logging
 from lib_shared.common_config import *
 def execute_firewall_command(command):
     """

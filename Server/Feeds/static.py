@@ -10,6 +10,6 @@ spoofed_user_agents = [
 ]
 
 # Connect to MongoDB
-client = MongoClient("mongodb://root:mongo1234@localhost:27017/")
+client = MongoClient("mongodb://root:mongo1234@172.17.0.1:27017/")
 db = client["Threat_Intel"]
 p_db = client["Prava"]

@@ -1,5 +1,5 @@
 import os
-import hashlib
+import time
 import requests
 import json
 import platform
@@ -75,34 +75,37 @@ def main():
     """Main function to set up file monitoring."""
     print("Started")
     i = 0
-    TA_thread=threading.Thread(target=TA.capture)
-    Res_Monitor = threading.Thread(target=RM.main)
     event_handler={}
-    observer={}
+    threads = []
+    observers={}
+    TA_thread=threading.Thread(target=TA.capture,daemon=True)
+    Res_Monitor = threading.Thread(target=RM.main,daemon=True)
+    threads.extend([TA_thread, Res_Monitor])
+    
     for file_path in log_files_to_watch:  
         event_handler[i]= FileChangeHandler(file_path)
-        observer[i] = Observer()
-        observer[i].schedule(event_handler[i], path=os.path.dirname(file_path), recursive=False)
+        observers[i] = Observer()
+        observers[i].schedule(event_handler[i], path=os.path.dirname(file_path), recursive=False)
         # Start monitoring
-        observer[i].start()
+        observers[i].start()
         i=i+1
     TA_thread.start()
     Res_Monitor.start()
     try:
         while True:
-            pass
+             time.sleep(10)
     except KeyboardInterrupt:
-        for a in range(i):
-            observer[a].stop()
-        TA_thread.stop()
-        RM.flag=False
-        # Res_Monitor.stop()
         print('Stopped monitoring.')
     finally:
-        for  a in range(i):
-            observer[a].join()
-        TA_thread.join()
-        Res_Monitor.join()
+        # Stop and join observers
+        for a in range(i):
+            observers[a].stop()
+        for a in range(i):
+            observers[a].join()
+
+        # Wait for threads to finish
+        for thread in threads:
+            thread.join()
 
 def add_token(token):
     with open('secret', 'w') as f:
