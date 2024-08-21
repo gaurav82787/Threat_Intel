@@ -10,12 +10,7 @@ services:
       - "1080:80"    # Example additional port
     volumes:
       - ./Server:/home/swiftsafe  # Local folder mapped to /data in the container
-    command: >
-      bash -c "apt-get update &&
-               apt-get install -y openssh-server &&
-               mkdir /var/run/sshd &&
-               echo 'root:root' | chpasswd &&
-               /usr/sbin/sshd -D"
+    command: ["sleep", "infinity"]
 
   linux2:
     image: ubuntu:latest
@@ -26,13 +21,7 @@ services:
       - "2021:21"  # Example additional port
     volumes:
       - ./Agent:/home/swiftsafe  # Local folder mapped to /data in the container
-    command: >
-      bash -c "apt-get update &&
-               apt-get install -y openssh-server &&
-               mkdir /var/run/sshd &&
-               echo 'root:root' | chpasswd &&
-               /usr/sbin/sshd -D"
-
+    command: ["sleep", "infinity"]
 networks:
   default:
     driver: bridge

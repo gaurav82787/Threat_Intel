@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 from Feeds.Feeds import *
+from Log_Analysis import analyze as LA
 import argparse
 import secrets
 import shutil
@@ -9,6 +10,7 @@ import tarfile
 import cgi
 import json
 from datetime import datetime
+
 Log_Dirrectory = "Log_Analysis/Collected_Logs"
 Mal_Traffic_Directory = "Traffic_Analysis/Captured_Malicious_Traffic"
 os.makedirs(Log_Dirrectory, exist_ok=True)
@@ -57,7 +59,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                                     os.makedirs(os.path.join(Mal_Traffic_Directory,agent['Agent_Name']), exist_ok=True)                             
                                 elif file_ext=="log":
                                     file_path = os.path.join(Log_Dirrectory,agent['Agent_Name'], file_name)
-                                    os.makedirs(os.path.join(Log_Dirrectory,agent['Agent_Name']), exist_ok=True)  
+                                    os.makedirs(os.path.join(Log_Dirrectory,agent['Agent_Name']), exist_ok=True) 
+                                     
                                 with open(file_path, 'wb') as output_file:
                                     shutil.copyfileobj(file_item.file, output_file)
                                 # Check file size
@@ -76,7 +79,19 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                                 
                         # Remove the compressed file after decompression
                                 os.remove(file_path)
-                                
+                                if file_ext=="log":
+                                    matched_client_logs= LA.read_and_compare_logs(decompressed_file_path)
+                                    if matched_client_logs:
+                                        for log in matched_client_logs:
+                                            a_db=client["Alerts"]
+                                            if agent["Agent_Name"] not in a_db.list_collection_names():
+                                                a_db.create_collection(agent["Agent_Name"])
+                                            a_collection=a_db[agent['Agent_Name']]
+                                            query = {'message': log}
+                                            entry = a_collection.find_one(query)
+                                            if not entry:
+                                                a_collection.insert_one({"date_time": datetime.now().isoformat(), "category": "mal_logs","message": log,"severity": "moderate", "description": "logs in comparison with stored mal logs"}) 
+
                                 print(f'File received and saved as {decompressed_file_path}')
                         self.send_response(200)
                         self.send_header('Content-type', 'application/json')
